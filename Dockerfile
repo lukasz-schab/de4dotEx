@@ -1,7 +1,7 @@
 # ==============================================================================
 # STAGE 1: Build BeaEngine (Native Library for ConfuserEx control flow cleaning)
 # ==============================================================================
-FROM ubuntu:22.04 AS beaengine-builder
+FROM ubuntu:22.04@sha256:b8b6ee6aa931ecd9d0d952abc34dc0e5f7c6a30c6bb71b079fe399fde0329c02 AS beaengine-builder
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
@@ -28,7 +28,7 @@ RUN mkdir -p /app && \
 # ==============================================================================
 # STAGE 2: Build de4dotEx (.NET 10.0 Cross-Platform Release)
 # ==============================================================================
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS dotnet-builder
+FROM mcr.microsoft.com/dotnet/sdk:10.0@sha256:35d40304542c8689331f8cab17c65926cdf48fe711e289321d71924b230a7d29 AS dotnet-builder
 WORKDIR /src
 
 # Copy all files to build
@@ -42,7 +42,7 @@ RUN rm -rf /app/publish/**/*.pdb /app/publish/**/*.xml
 # ==============================================================================
 # STAGE 3: Final Runtime Image (.NET 10.0 on Ubuntu / Runtime)
 # ==============================================================================
-FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/runtime:10.0@sha256:ff17a18b639a0327e52c7c296fa2e1abe6e03eb61d8121a8ef67cc6aa430a27e AS runtime
 WORKDIR /app
 
 # Install native dependencies required for execution (e.g. globalization, bash)
